@@ -122,6 +122,9 @@ for product ideas and the owning repository's Issues for reproducible bugs.
 Never attach pairing links, QR codes, credentials, private source, or unreviewed
 diagnostic logs.
 
+The [community launch kit](docs/community-launch-kit.md) contains reviewed
+project facts, English and Chinese launch copy, and a publication checklist.
+
 ## Project status
 
 The public Runtime is currently `0.2.0-beta.10`. Near-term work focuses on
