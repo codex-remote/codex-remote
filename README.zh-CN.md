@@ -1,6 +1,7 @@
 # Codex Remote
 
 [![Runtime：0.2.0-beta.10](https://img.shields.io/badge/runtime-0.2.0--beta.10-0B6E4F.svg)](https://github.com/codex-remote/homebrew-tap/releases/tag/v0.2.0-beta.10)
+[![CI](https://github.com/codex-remote/codex-remote/actions/workflows/ci.yml/badge.svg)](https://github.com/codex-remote/codex-remote/actions/workflows/ci.yml)
 [![许可证：Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-0B6E4F.svg)](LICENSE)
 [![平台](https://img.shields.io/badge/platform-Apple%20Silicon%20Mac-1F2937.svg)](#运行要求)
 [![GitHub Stars](https://img.shields.io/github/stars/codex-remote/codex-remote?style=flat)](https://github.com/codex-remote/codex-remote)
