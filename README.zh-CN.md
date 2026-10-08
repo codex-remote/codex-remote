@@ -3,7 +3,7 @@
 [![最新版本](https://img.shields.io/github/v/release/codex-remote/homebrew-tap?include_prereleases&label=runtime)](https://github.com/codex-remote/homebrew-tap/releases)
 [![许可证：Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-0B6E4F.svg)](LICENSE)
 [![平台](https://img.shields.io/badge/platform-Apple%20Silicon%20Mac-1F2937.svg)](#运行要求)
-[![GitHub Stars](https://img.shields.io/github/stars/codex-remote/codex-remote?style=flat)](https://github.com/codex-remote/codex-remote/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/codex-remote/codex-remote?style=flat)](https://github.com/codex-remote/codex-remote)
 
 [English](README.md) | [快速开始](#快速开始) | [开源代码](#开源代码) | [路线图](ROADMAP.zh-CN.md) | [版本发布](https://github.com/codex-remote/homebrew-tap/releases)
 
@@ -67,7 +67,7 @@ Setup、启动或手机连接异常时运行 `codex-remote doctor`。后续更�
 
 ![Codex Remote 局域网架构](assets/local-network-architecture.svg)
 
-手机连接 Mac 上的 Gateway。Gateway 通过版本化 HTTPS、SSE 和 WebSocket 契约连接
+手机连接 Mac 上的 Gateway。Gateway 通过版本化 HTTP、SSE 和 WebSocket 契约连接
 Relay 与 Mac Agent；Mac Agent 通过官方 App Server 接口使用 Codex。Runtime 使用
 自己隔离的 PostgreSQL 和 Valkey 数据，不会替换用户已有的数据库。
 

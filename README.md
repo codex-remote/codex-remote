@@ -3,7 +3,7 @@
 [![Latest release](https://img.shields.io/github/v/release/codex-remote/homebrew-tap?include_prereleases&label=runtime)](https://github.com/codex-remote/homebrew-tap/releases)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-0B6E4F.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Apple%20Silicon%20Mac-1F2937.svg)](#requirements)
-[![GitHub stars](https://img.shields.io/github/stars/codex-remote/codex-remote?style=flat)](https://github.com/codex-remote/codex-remote/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/codex-remote/codex-remote?style=flat)](https://github.com/codex-remote/codex-remote)
 
 [简体中文](README.zh-CN.md) | [Install](#quick-start) | [Source code](#source-code) | [Roadmap](ROADMAP.md) | [Releases](https://github.com/codex-remote/homebrew-tap/releases)
 
@@ -71,7 +71,7 @@ workspace or session data.
 
 ![Codex Remote local-network architecture](assets/local-network-architecture.svg)
 
-The phone connects to a Gateway on your Mac. The Gateway uses versioned HTTPS,
+The phone connects to a Gateway on your Mac. The Gateway uses versioned HTTP,
 SSE, and WebSocket contracts to reach the Relay and Mac Agent; the Mac Agent
 talks to Codex through the official App Server interface. The Runtime keeps its
 own PostgreSQL and Valkey state and does not replace your existing databases.
