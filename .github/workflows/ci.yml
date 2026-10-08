@@ -19,4 +19,8 @@ jobs:
       - name: Check local Markdown links
         run: ruby scripts/check-local-links.rb
       - name: Check whitespace
-        run: git diff --check
+        run: |
+          if git grep -nE '[[:blank:]]+$' -- '*.md' '*.yml' '*.rb'; then
+            echo 'Tracked documentation contains trailing whitespace.' >&2
+            exit 1
+          fi
