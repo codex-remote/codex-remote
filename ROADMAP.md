@@ -8,7 +8,8 @@ Items move only after implementation and real-device validation.
 ## Available now
 
 - Apple Silicon macOS Runtime distributed through a third-party Homebrew Tap.
-- Same-network iPhone Safari access to Mac-hosted Codex projects and sessions.
+- iPhone Safari access over the same trusted LAN or a private Tailscale network
+  to Mac-hosted Codex projects and sessions.
 - Task submission, follow-ups, live status, results, one-time pairing, refresh,
   browser logout, repair, health checks, and explicit local-data purge.
 - Independent Apache-2.0 source repositories with versioned integration
@@ -20,6 +21,8 @@ Items move only after implementation and real-device validation.
 - Improve concurrent-tab behavior while retaining replay protection.
 - Expand clean-install, upgrade, rollback, uninstall, and real-device tests.
 - Improve diagnostics for port conflicts, firewalls, and local-network routing.
+- Release automatic `lan` / `tailscale` mode selection, online iOS device
+  discovery, and MagicDNS pairing.
 
 ## Stable distribution gates
 
@@ -31,9 +34,9 @@ Items move only after implementation and real-device validation.
 ## Not available today
 
 - Intel, Windows, or Linux Runtime packages.
-- A public internet endpoint or TLS for the phone connection.
+- A public internet endpoint without Tailnet identity, or TLS for that path.
 - A stable compatibility or production support commitment.
 
-Public-network access will not be advertised until authentication, transport
-security, abuse controls, capacity, recovery, and operations are implemented
-and verified.
+Tailscale is the verified private remote path. Public access without device
+identity still requires TLS, abuse controls, capacity, recovery, and operations
+to be implemented and verified.
