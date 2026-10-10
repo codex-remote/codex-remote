@@ -6,21 +6,34 @@
 [![Platform](https://img.shields.io/badge/platform-Apple%20Silicon%20Mac-1F2937.svg)](#requirements)
 [![GitHub stars](https://img.shields.io/github/stars/codex-remote/codex-remote?style=flat)](https://github.com/codex-remote/codex-remote)
 
-[简体中文](README.zh-CN.md) | [Install](#quick-start) | [Source code](#source-code) | [Roadmap](ROADMAP.md) | [Releases](https://github.com/codex-remote/homebrew-tap/releases)
+[简体中文](README.zh-CN.md) | [Quick start](#quick-start) | [Use it away from home](docs/private-remote-access.md) | [Source](#source-code) | [Roadmap](ROADMAP.md)
 
-![Codex Remote: use your phone as a remote workbench for Codex](assets/social-preview.png)
+![Codex Remote: use your phone as a remote workbench for Codex](assets/social-preview-v2.png)
 
-**Use your phone as a remote workbench for Codex running on your Mac.**
+**Same Wi-Fi or miles away, continue Codex on your Mac from your iPhone.**
 
-Start a long-running task on your Mac, then use your iPhone to follow its
-progress, send a follow-up, or review the result. Codex and your project files
-stay on the Mac. Codex Remote is not a remote desktop and does not stream your
-screen or control your mouse and keyboard.
+Codex Remote turns an iPhone into a focused workbench for AI coding tasks.
+Browse projects and sessions, start work, continue a conversation, follow live
+output, and inspect results. It is not a remote desktop: your screen is not
+streamed, and code, tools, and execution stay on your Mac.
 
 > [!WARNING]
-> Codex Remote is pre-release software. The current public Beta is for Apple
-> Silicon Macs and same-network iPhone Safari access. It is unsigned, not Apple
-> notarized, and must not be exposed directly to the public internet.
+> This is an unsigned, unnotarized public Beta for Apple Silicon Macs and
+> iPhone Safari. Remote access must use a private Tailscale network. Do not
+> port-forward the Gateway or publish it with Tailscale Funnel.
+
+## Two trusted access modes
+
+| Mode | Best for | Network |
+| --- | --- | --- |
+| Local network | Phone and Mac on the same trusted Wi-Fi | No extra account; pair directly |
+| Private remote | Reaching a Mac at home or the office while away | Install Tailscale; Personal is currently free for personal use |
+
+![Codex Remote local and private remote architecture](assets/access-modes-architecture.svg)
+
+Tailscale encrypts the phone-to-Mac path with WireGuard and requires no fixed
+public IP, dynamic DNS, router port forwarding, or cloud Codex environment.
+The Runtime and project data remain on the Mac.
 
 ## Quick start
 
@@ -37,18 +50,29 @@ brew install codex-remote/tap/codex-remote
 codex-remote setup --workspace-root ~/work
 ```
 
-### 3. Pair your iPhone
+### 3. Choose a network and pair
+
+On the same local network:
 
 ```bash
 codex-remote pair
 ```
 
-Scan the terminal QR code with your iPhone, choose a project and session, and
-continue working. Treat the QR code and full pairing URL like a password: the
-credential expires after 10 minutes by default and can be exchanged only once.
+For access away from home, install Tailscale on the Mac and iPhone, sign in to
+the same [free Personal tailnet](https://tailscale.com/pricing), and follow the
+[private remote access guide](docs/private-remote-access.md) for the current
+public Beta.
 
-Run `codex-remote doctor` whenever setup, startup, or phone connectivity needs
-diagnosis. Updates use the normal `brew upgrade codex-remote` flow.
+Runtime source now includes automatic mode selection for the next Beta that
+passes the release gates:
+
+```bash
+codex-remote network tailscale
+codex-remote pair
+```
+
+Treat the QR code and complete pairing URL like a password. The credential
+expires after 10 minutes by default and can be exchanged only once.
 
 ## Product preview
 
@@ -57,88 +81,77 @@ diagnosis. Updates use the normal `brew upgrade codex-remote` flow.
   <img src="assets/mobile-conversation.png" alt="A completed Codex task viewed on an iPhone" width="360">
 </p>
 
-The screenshots use sample projects and tasks. They contain no personal
-workspace or session data.
+The screenshots use sample projects and tasks and contain no personal data.
 
 ## What you can do
 
-- Browse the Codex projects and sessions available on your Mac.
+- Browse allowed Codex projects and historical sessions on your Mac.
 - Start a task or continue an existing conversation from your phone.
-- Follow live task status and read results as they arrive.
-- Keep execution, project files, and persistent Runtime data on the Mac.
-- Diagnose the local stack with one CLI instead of operating each service.
+- Follow live status, output, and final results.
+- Interrupt work that is moving in the wrong direction.
+- Keep projects, credentials, databases, and Codex execution on the Mac.
+- Use one CLI for setup, pairing, health checks, repair, and upgrades.
 
-## How it works
+## Security model
 
-![Codex Remote local-network architecture](assets/local-network-architecture.svg)
+- The phone reaches only the Mobile Web Gateway. Run Server, Auth Control,
+  PostgreSQL, Valkey, and internal Mac Agent interfaces remain hidden.
+- A one-time pairing grant creates a device session; short-lived access tokens
+  and rotating refresh tokens authorize later requests.
+- Local mode is for a trusted network only.
+- Tailscale mode encrypts the private path with WireGuard. The Tailnet URL is
+  still HTTP inside that tunnel and is not a public HTTPS service.
+- Moving between LAN and Tailnet origins requires pairing again.
 
-The phone connects to a Gateway on your Mac. The Gateway uses versioned HTTP,
-SSE, and WebSocket contracts to reach the Relay and Mac Agent; the Mac Agent
-talks to Codex through the official App Server interface. The Runtime keeps its
-own PostgreSQL and Valkey state and does not replace your existing databases.
+See the [Homebrew Tap guide](https://github.com/codex-remote/homebrew-tap#security--network-model)
+for installation, security, troubleshooting, and uninstall details.
 
 ## Requirements
 
-- Apple Silicon Mac with macOS and [Homebrew](https://brew.sh/).
+- Apple Silicon Mac with macOS and [Homebrew](https://brew.sh/); Intel is not
+  supported by this Beta.
 - Codex CLI `0.148.0` or later, installed and signed in. Runtime
   `0.2.0-beta.10` was verified through `codex-cli 0.154.0-alpha.6.2`.
-- iPhone Safari on the same trusted local network as the Mac.
-- A Mac that remains powered on, awake, and able to run Codex.
-
-This Beta uses plain HTTP between the phone and Mac. Do not port-forward the
-Gateway, publish it through a tunnel, or use it on an untrusted network. See the
-[complete security and network model](https://github.com/codex-remote/homebrew-tap#security--network-model)
-before installing.
+- iPhone Safari. Other mobile devices and browsers still need full acceptance.
+- A Mac that remains powered on, connected, awake, and able to run Codex.
+- Private remote mode requires the official Tailscale client on both devices
+  and the same tailnet account.
 
 ## Source code
 
-Codex Remote is open source under Apache-2.0. The project intentionally uses
-independent repositories so each component can be built, tested, versioned, and
-reviewed on its own.
+Codex Remote is Apache-2.0 open source and preserves independent repository
+boundaries:
 
 | Repository | What it contains |
 | --- | --- |
 | [iphone-app](https://github.com/codex-remote/iphone-app) | Native SwiftUI iPhone client |
 | [mobile-web](https://github.com/codex-remote/mobile-web) | React mobile client and same-origin Gateway |
-| [relay-server](https://github.com/codex-remote/relay-server) | Relay, Run Server, Runtime authentication, and public contracts |
+| [relay-server](https://github.com/codex-remote/relay-server) | Relay, Run Server, Runtime Auth, and public contracts |
 | [mac-agent](https://github.com/codex-remote/mac-agent) | Local Codex execution and workspace adapter |
-| [admin-platform](https://github.com/codex-remote/admin-platform) | Local diagnostics server, collector, and Admin Web |
 | [runtime-distribution](https://github.com/codex-remote/runtime-distribution) | Runtime CLI, supervisor, assembly, and release validation |
-| [homebrew-tap](https://github.com/codex-remote/homebrew-tap) | Homebrew Formula, release artifacts, and detailed installation guide |
+| [homebrew-tap](https://github.com/codex-remote/homebrew-tap) | Homebrew install, release assets, and operations guide |
 | [docs](https://github.com/codex-remote/docs) | Product, architecture, protocol, and ADR documentation |
 
-Cross-repository integration happens through versioned contracts, schemas,
-fixtures, and release manifests. The repositories do not use sibling source
-imports, submodules, or symlink-based sharing.
+Repositories integrate through versioned contracts, schemas, fixtures, and
+release manifests rather than sibling imports, submodules, or symlink sharing.
 
-## Build and contribute
+## Support the project
 
-Start in the repository that owns the component you want to change. Every code
-repository documents its prerequisites, development command, focused tests,
-and architecture boundary in its own README.
+If Codex Remote helps your workflow:
 
-Read the organization [contribution guide](https://github.com/codex-remote/.github/blob/main/CONTRIBUTING.md)
-before opening a pull request. Use [GitHub Discussions](https://github.com/codex-remote/codex-remote/discussions)
-for product ideas and the owning repository's Issues for reproducible bugs.
-Never attach pairing links, QR codes, credentials, private source, or unreviewed
-diagnostic logs.
+- Star this repository so other local-first AI coding users can find it.
+- Share your use case in [Discussions](https://github.com/codex-remote/codex-remote/discussions).
+- Open a reproducible issue or pull request in the component that owns it.
 
-The [community launch kit](docs/community-launch-kit.md) contains reviewed
-project facts, English and Chinese launch copy, and a publication checklist.
+Never upload a real pairing QR code, complete pairing link, credential, private
+source, or unreviewed diagnostic log.
 
 ## Project status
 
-The public Runtime is currently `0.2.0-beta.10`. Near-term work focuses on
-signed and notarized distribution, stronger device management, broader real
-device regression coverage, and a secure transport before any public-network
-access is advertised. See the [Roadmap](ROADMAP.md) for the current boundary.
-
-## License and independence
-
-Current source code and future Runtime artifacts are licensed under the
-[Apache License 2.0](LICENSE). Previously published Beta 1 through Beta 3
-archives retain the license embedded in those immutable artifacts. See
-[NOTICE](NOTICE) for attribution and project-name guidance.
+The public Runtime is `0.2.0-beta.10`. The Tailscale path has been verified
+from an iPhone on 5G to a Mac Gateway. Automatic network-mode selection is on
+Runtime source and awaits the next Beta's clean-component, upgrade, and
+real-device release gates. See the [Roadmap](ROADMAP.md).
 
 Codex Remote is an independent community project. It is not affiliated with or
 endorsed by OpenAI. Codex and OpenAI are trademarks of their respective owners.
